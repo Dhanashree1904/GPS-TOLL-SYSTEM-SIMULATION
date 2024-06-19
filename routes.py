@@ -1,7 +1,7 @@
 import geopandas as gpd
 
 # Load the GeoJSON data
-geojson_file = 'C:/Users/Dhanashree/OneDrive/Desktop/intel project/map.geojson'
+geojson_file = 'C:\Users\Neev\OneDrive\Desktop\intel\GPS-TOLL-SYSTEM-SIMULATION\map.geojson'
 data = gpd.read_file(geojson_file)
 
 # Extract roads, tolls, and points
