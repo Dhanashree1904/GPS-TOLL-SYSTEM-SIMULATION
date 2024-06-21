@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Toll-Based System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">GPS Toll-Based System</h1>
+        <div id="vehicle-data">
+            <h2>Vehicle Data</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Car ID</th>
+                        <th>Start Position</th>
+                        <th>End Position</th>
+                        <th>Balance</th>
+                        <th>Toll</th>
+                        <th>Toll Charges</th>
+                        <th>Distance to Toll</th>
+                        <th>Passage Time</th>
+                        <th>Road Travel Time</th>
+                    </tr>
+                </thead>
+                <tbody id="vehicle-data-body">
+                    <!-- Data will be populated here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-3">
+            <a href="/simulation_map" class="btn btn-primary" target="_blank">View Simulation Map</a>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            // Function to populate vehicle data table
+            function populateVehicleData(data) {
+                var rows = '';
+                data.forEach(function(vehicle) {
+                    rows += '<tr>';
+                    rows += '<td>' + vehicle.car_id + '</td>';
+                    rows += '<td>' + vehicle.start_position + '</td>';
+                    rows += '<td>' + vehicle.end_position + '</td>';
+                    rows += '<td>' + vehicle.balance + '</td>';
+                    rows += '<td>' + vehicle.toll + '</td>';
+                    rows += '<td>' + vehicle.toll_charges + '</td>';
+                    rows += '<td>' + vehicle.distance_to_toll + '</td>';
+                    rows += '<td>' + vehicle.passage_time + '</td>';
+                    rows += '<td>' + vehicle.road_travel_time + '</td>';
+                    rows += '</tr>';
+                });
+                $('#vehicle-data-body').html(rows);
+            }
+
+            // Load vehicle data on page load
+            $.getJSON('/api/vehicle_data', function(data) {
+                populateVehicleData(data);
+            }).fail(function(jqxhr, textStatus, error) {
+                var err = textStatus + ", " + error;
+                console.log("Request Failed: " + err);
+                $('#vehicle-data-body').html('<tr><td colspan="9">Failed to load vehicle data.</td></tr>');
+            });
+        });
+    </script>
+</body>
+</html>
+
+

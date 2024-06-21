@@ -13,7 +13,7 @@ from tollcalc import calculate_toll
 
 # Function to load data from GeoPackage files
 def load_data():
-    base_path = r'C:\Users\Neev\OneDrive\Desktop\intel\GPS-TOLL-SYSTEM-SIMULATION'  # Replace with your actual base directory path
+    base_path = r'C:\Users\Admin\Desktop\Intel Project'  # Replace with your actual base directory path
     roads_path = os.path.join(base_path, 'roads.gpkg')
     tolls_path = os.path.join(base_path, 'tolls.gpkg')
     points_path = os.path.join(base_path, 'points.gpkg')
@@ -162,3 +162,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
