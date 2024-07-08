@@ -1,7 +1,6 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 import os
 import pandas as pd
-import folium
 
 app = Flask(__name__)
 
@@ -14,11 +13,11 @@ def home():
 
 @app.route('/api/vehicle_data', methods=['GET'])
 def get_vehicle_data():
-    print(f"CSV file path: {vehicle_data_path}")  # Debugging line to print the file path
+    print(f"CSV file path: {vehicle_data_path}")  # Debugging line to print the file path once
     if os.path.exists(vehicle_data_path):
         try:
             vehicle_data = pd.read_csv(vehicle_data_path)
-            print(vehicle_data)  # Debugging line to print the data
+            print(vehicle_data)  # Print the data only once after successfully reading the CSV file
             return jsonify(vehicle_data.to_dict(orient='records'))
         except pd.errors.EmptyDataError:
             print("CSV file is empty")
@@ -32,19 +31,11 @@ def get_vehicle_data():
 
 @app.route('/simulation_map')
 def simulation_map():
-    # Example of creating a Folium map
-    m = folium.Map(location=[51.5074, -0.1278], zoom_start=10)  # London coordinates
-
-    # Example marker
-    folium.Marker([51.5074, -0.1278], popup='London').add_to(m)
-
-    # Save the map to HTML
-    map_file_path = os.path.join(os.path.dirname(__file__), 'templates', 'map.html')
-    m.save(map_file_path)
-
     return render_template('map.html')
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-

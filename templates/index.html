@@ -37,9 +37,12 @@
     </div>
     <script>
         $(document).ready(function() {
+            let dataLoaded = false;
+    
             // Function to populate vehicle data table
             function populateVehicleData(data) {
                 var rows = '';
+                console.log("Data received:", data);  // Debugging line to print the data
                 data.forEach(function(vehicle) {
                     rows += '<tr>';
                     rows += '<td>' + vehicle.car_id + '</td>';
@@ -55,17 +58,32 @@
                 });
                 $('#vehicle-data-body').html(rows);
             }
-
+    
+            // Retry mechanism for data loading
+            function loadVehicleData(retries = 3) {
+                if (dataLoaded) return;
+    
+                $.getJSON('/api/vehicle_data', function(data) {
+                    console.log(data);  // Debugging line to print the fetched data
+                    populateVehicleData(data);
+                    dataLoaded = true;  // Set flag to true after data is loaded
+                }).fail(function(jqxhr, textStatus, error) {
+                    var err = textStatus + ", " + error;
+                    console.log("Request Failed: " + err);
+                    if (retries > 0) {
+                        console.log("Retrying...");
+                        setTimeout(() => loadVehicleData(retries - 1), 1000); // Retry after 1 second
+                    } else {
+                        $('#vehicle-data-body').html('<tr><td colspan="9">Failed to load vehicle data.</td></tr>');
+                    }
+                });
+            }
+    
             // Load vehicle data on page load
-            $.getJSON('/api/vehicle_data', function(data) {
-                populateVehicleData(data);
-            }).fail(function(jqxhr, textStatus, error) {
-                var err = textStatus + ", " + error;
-                console.log("Request Failed: " + err);
-                $('#vehicle-data-body').html('<tr><td colspan="9">Failed to load vehicle data.</td></tr>');
-            });
+            loadVehicleData();
         });
     </script>
+    
 </body>
 </html>
 
